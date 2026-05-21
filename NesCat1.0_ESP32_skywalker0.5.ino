@@ -55,7 +55,7 @@
 #define INCLUDED_LIBRARIES true //better enable this feature!                           
 
 #define LCD_ENABLED true
-#define COMPOSITE_VIDEO_ENABLED true  //Do not disable! it also disable ADC.
+#define COMPOSITE_VIDEO_ENABLED false  //Do not disable! it also disable ADC.
 #define KEYBOARD_ENABLED true
 #define SOUND_ENABLED true
 #define BLUETOOTH_ENABLED false //experimental.
@@ -65,15 +65,27 @@
 
 //********************************************************************************
 
+///Orignal PINS
 //KEY BUTTONS PINS:
-#define PIN_UP     39  //SVN
-#define PIN_DOWN   35  //IO35
-#define PIN_LEFT   36  //SVP
-#define PIN_RIGHT  12  //TDI => Do not install 330R resistor!!!
-#define PIN_A      2   //IO2
-#define PIN_B      14  //TMS
-#define PIN_START  15  //TDO
-#define PIN_SELECT 13  //TCK
+//#define PIN_UP     39  //SVN
+//#define PIN_DOWN   35  //IO35
+//#define PIN_LEFT   36  //SVP
+//#define PIN_RIGHT  12  //TDI => Do not install 330R resistor!!!
+//#define PIN_A      2   //IO2
+//#define PIN_B      14  //TMS
+//#define PIN_START  15  //TDO
+//#define PIN_SELECT 13  //TCK
+
+///NesCat0.5 PINS
+#define PIN_UP     2    // IO2
+#define PIN_DOWN   15   // IO15
+#define PIN_LEFT   39   // VN(39)
+#define PIN_RIGHT  34   // IO34
+#define PIN_A      21   // IO21
+#define PIN_B      26   // IO26
+#define PIN_START  4    // IO4
+#define PIN_SELECT 35   // IO35 modified260515
+//#define PIN_SELECT 17   // IO17
 
 ///!!! do not forget 1KOHM resistors
 #define KEYBOARD_DATA 4  /// ---[ 1K ]--- // -D
@@ -95,11 +107,18 @@
 #define TFT_MOSI 23  // Data out (SDA) //better not change
 #define TFT_SCLK 18  // Clock out (SCL) //better not change
 
-//micro_SD_Card: //GPIO16 and GPIO17 can not use on WROVER
-#define SOFTSD_MOSI_PIN (GPIO_NUM_33)
-#define SOFTSD_MISO_PIN (GPIO_NUM_22)
-#define SOFTSD_SCK_PIN (GPIO_NUM_21)
-#define SD_CS_PIN -1  //
+//Original micro_SD_Card: //GPIO16 and GPIO17 can not use on WROVER
+//#define SOFTSD_MOSI_PIN (GPIO_NUM_33)
+//#define SOFTSD_MISO_PIN (GPIO_NUM_22)
+//#define SOFTSD_SCK_PIN (GPIO_NUM_21)
+//#define SD_CS_PIN -1  //
+
+//NesCat0.5 micro_SD_Card:
+#define SOFTSD_MOSI_PIN 12
+#define SOFTSD_MISO_PIN 13
+#define SOFTSD_SCK_PIN 14
+#define SD_CS_PIN 22
+
 
 //Oscilloscope INPUT:
 #define ADC_CHANNEL   ADC1_CHANNEL_6 // GPIO34
@@ -199,7 +218,7 @@ arduinoFFT FFT = arduinoFFT();
 //USE SDFAT BETA!
 ///SdFatSoftSpi<SOFTSD_MISO_PIN, SOFTSD_MOSI_PIN, SOFTSD_SCK_PIN> SD;
 SoftSpiDriver<SOFTSD_MISO_PIN, SOFTSD_MOSI_PIN, SOFTSD_SCK_PIN> softSpi;
-#define SD_CONFIG SdSpiConfig(-1, DEDICATED_SPI, SD_SCK_MHZ(0), &softSpi)
+#define SD_CONFIG SdSpiConfig(SD_CS_PIN, DEDICATED_SPI, SD_SCK_MHZ(0), &softSpi) //Claudeにより-1からSD_CS_PINに
 SdFat SD;
 File fp;
 
@@ -1055,10 +1074,10 @@ void setup() {
       PSRAMSIZE = ESP.getPsramSize();
       PSRAM = (uint8_t*)ps_malloc(2097152); //PSRAM malloc 2MB
    } else {
+      printf("NO PSRAM DETECTED."); //claudeで{}外にあることを指摘
+      PSRAMSIZE = 0;
    }
 
-      printf("NO PSRAM DETECTED.");
-      PSRAMSIZE = 0;
 
 
    Serial.print("Total PSRAM: ");
@@ -1088,8 +1107,8 @@ void setup() {
    // if the display has CS pin try with SPI_MODE0
    tft.init(240, 240, SPI_MODE2);    // Init ST7789 display 240x240 pixel
    // if the screen is flipped, remove this command
-   tft.setRotation(3);
-   tft.setSPISpeed(40000000); //max 40MHz for 1.3inch LCD!!! (80MHz only for 1.54inch LCD)
+   tft.setRotation(2); //rotate 90
+   tft.setSPISpeed(80000000); //max 40MHz for 1.3inch LCD!!! (80MHz only for 1.54inch LCD)
    tft.fillScreen(ST77XX_BLACK); 
 
    tft.println("NCAT SYSTEM: MEOW!..."); //??? :D
@@ -1116,6 +1135,9 @@ void setup() {
    set_font_XY(32, 240 / 2 - 8);
    draw_string("NCat SYSTEM by Nathalis", 48);
    delay(500);
+   
+// I2S reset for sound init  Cloudeの追加コード
+   periph_module_reset(PERIPH_I2S0_MODULE);
 //--------------------------------------------------------------------------------
    I2S0.conf.rx_start = 0; /// stop DMA ADC
    I2S0.in_link.start = 0;
