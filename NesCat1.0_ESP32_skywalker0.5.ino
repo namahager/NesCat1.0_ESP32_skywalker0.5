@@ -114,7 +114,7 @@
 //#define SD_CS_PIN -1  //
 
 //NesCat0.5 micro_SD_Card:
-#define SOFTSD_MOSI_PIN 12
+#define SOFTSD_MOSI_PIN 33  //pullup 対策
 #define SOFTSD_MISO_PIN 13
 #define SOFTSD_SCK_PIN 14
 #define SD_CS_PIN 22
@@ -613,11 +613,12 @@ static void lcd_write_frame(const uint16_t x, const uint16_t y, const uint16_t w
 
 
     ///PAL optimalisation in this case:
-    tft.drawRGBBitmap(0, i, (uint16_t *)(SCREENBUFFER), 48, 1);
-    tft.drawRGBBitmap(48, i, (uint16_t *)(SCREENBUFFER + 48), 48, 1);
-    tft.drawRGBBitmap(96, i, (uint16_t *)(SCREENBUFFER + 96), 48, 1);
-    tft.drawRGBBitmap(144, i, (uint16_t *)(SCREENBUFFER + 144), 48, 1);
-    tft.drawRGBBitmap(192, i, (uint16_t *)(SCREENBUFFER + 192), 48, 1);
+    //tft.drawRGBBitmap(0, i, (uint16_t *)(SCREENBUFFER), 48, 1);
+    //tft.drawRGBBitmap(48, i, (uint16_t *)(SCREENBUFFER + 48), 48, 1);
+    //tft.drawRGBBitmap(96, i, (uint16_t *)(SCREENBUFFER + 96), 48, 1);
+    //tft.drawRGBBitmap(144, i, (uint16_t *)(SCREENBUFFER + 144), 48, 1);
+    //tft.drawRGBBitmap(192, i, (uint16_t *)(SCREENBUFFER + 192), 48, 1);
+    tft.drawRGBBitmap(0, i, (uint16_t *)SCREENBUFFER, 240, 1);  // 240 px/frame
   }
 }
 //--------------------------------------------------------------------------------
