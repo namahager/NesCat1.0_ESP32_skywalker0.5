@@ -56,7 +56,7 @@
 
 #define LCD_ENABLED true
 #define COMPOSITE_VIDEO_ENABLED false  //Do not disable! it also disable ADC.
-#define KEYBOARD_ENABLED true
+#define KEYBOARD_ENABLED false
 #define SOUND_ENABLED true
 #define BLUETOOTH_ENABLED false //experimental.
 
@@ -92,7 +92,7 @@
 #define KEYBOARD_CLK 0   /// ---[ 1K ]--- // +D
 
 //COMPOSITE_VIDEO: - //DAC_GPIO25_CHANNEL or DAC_GPIO26_CHANNEL
-#define VIDEO_OUT (DAC_GPIO26_CHANNEL)
+#define VIDEO_OUT DAC_CHANNEL_2
 
 //AUDIO_i2S:
 #define I2S_BCK_IO (GPIO_NUM_27) //BCK
@@ -1178,7 +1178,7 @@ void loop() {
       Serial.println("Starting NES EMULATOR appliication.");
       screenmemory_fillscreen(63); //black color
 
-      init_sound(); //START AUDIO
+       // init_sound(); //START AUDIO
 
       Serial.println("NES_POWER: ##################");
 
@@ -1206,6 +1206,8 @@ void loop() {
 
       if (DEBUG) Serial.print("SELECTED NES: ");
       if (DEBUG) Serial.println(MAINPATH);
+
+      init_sound(); //START AUDIO ← ここに追加Claude
 
       romdata = (unsigned char *)getromdata(MAINPATH);
 

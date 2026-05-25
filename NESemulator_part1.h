@@ -173,6 +173,7 @@ i2s_config_t audio_cfg = {
 int init_sound(void)
 {
 #if SOUND_ENABLED
+  i2s_driver_uninstall(I2S_NUM_1); // ← 追加：先に解放する
   i2s_driver_install(I2S_NUM_1, &audio_cfg, 0, NULL);
   i2s_set_pin(I2S_NUM_1, &pin_config);
   i2s_set_sample_rates(I2S_NUM_1, DEFAULT_SAMPLERATE);
@@ -367,6 +368,7 @@ char* NESEXPLORE(char* PATH) {
     set_font_XY(16, 48 + (20 * (CURSOR % FILESPERPAGE)));
     draw_string("->", 48);
     delay(200);
+   
 
     //PROCESS CURSOR SELECTION
     while (JOY_CROSS == 0 && JOY_SQUARE == 0 && JOY_OPTIONS == 0 && JOY_SHARE == 0 && JOY_UP == 0 && JOY_DOWN == 0 && JOY_LEFT == 0 && JOY_RIGHT == 0) {
@@ -402,6 +404,7 @@ char* NESEXPLORE(char* PATH) {
         JOY_RIGHT = 1;   //RIGHT
         delay(25);
       }
+      delay(1);  // claudeによる追記
     }
 
     //Empty Cursor
