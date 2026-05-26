@@ -97,7 +97,7 @@
 //AUDIO_i2S:
 #define I2S_BCK_IO (GPIO_NUM_27) //BCK
 #define I2S_WS_IO  (GPIO_NUM_32) //LCK
-#define I2S_DO_IO  (GPIO_NUM_25) //DIN
+#define I2S_DO_IO  (GPIO_NUM_33) //DIN 33sorato 25 comp
 #define I2S_DI_IO  (-1)
 
 //LCD_ST7789:
@@ -114,7 +114,7 @@
 //#define SD_CS_PIN -1  //
 
 //NesCat0.5 micro_SD_Card:
-#define SOFTSD_MOSI_PIN 33  //pullup 対策
+#define SOFTSD_MOSI_PIN 12  //pullup 対策 12sorato 33 comp
 #define SOFTSD_MISO_PIN 13
 #define SOFTSD_SCK_PIN 14
 #define SD_CS_PIN 22

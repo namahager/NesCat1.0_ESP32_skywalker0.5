@@ -228,7 +228,8 @@ void do_audio_frame()
     {
       //      audio_frame[i] = audio_frame[i] + 0x8000;
       ///      uint16_t a = (audio_frame[i] >> 3); //VEEERY BAD!
-      uint16_t a = (audio_frame[i] >> 0);
+      ///uint16_t a = (audio_frame[i] >> 1);
+      uint16_t a = (audio_frame[i] >> 0) * 5 / 10;  // 70%
       audio_frame[i * 2 + 1] = 0x8000 + a;
       audio_frame[i * 2] = 0x8000 - a;
 
