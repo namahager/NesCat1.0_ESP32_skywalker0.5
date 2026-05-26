@@ -25,6 +25,7 @@ It has been tested and confirmed working with the hardware and software environm
 | Audio Amplifier | MAX98357 I2S |
 | Storage | MicroSD card module (SPI) |
 | Buttons | Tactile micro switches with 10kΩ pull-down resistors to GND |
+![Hardware](nescat10_hw_479x359.jpg)
 
 ---
 
